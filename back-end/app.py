@@ -160,6 +160,21 @@ def update_user_challenge(id):
     db.session.commit()
     return jsonify(userchallenge_to_dict(uc))
 
+@app.route("/login", methods=["POST"])
+def login():
+    data = request.json
+    email = data.get("email")
+    password = data.get("password")
+
+    user = User.query.filter_by(email=email, password=password).first()
+    if user:
+        return jsonify({
+            "id": user.id,
+            "name": user.name,
+            "email": user.email
+        }), 200
+    else:
+        return jsonify({"error": "Invalid email or password"}), 401
 
 # -------- RUN --------
 if __name__ == "__main__":
